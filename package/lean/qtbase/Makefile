@@ -8,7 +8,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=qtbase
 PKG_BASE:=5.15
-PKG_BUGFIX:=1
+PKG_BUGFIX:=2
 PKG_VERSION:=$(PKG_BASE).$(PKG_BUGFIX)
 PKG_RELEASE:=1
 
@@ -18,7 +18,7 @@ PKG_SOURCE_URL:= \
 		http://master.qt.io/archive/qt/$(PKG_BASE)/$(PKG_VERSION)/submodules \
 		http://mirrors.tuna.tsinghua.edu.cn/qt/archive/qt/$(PKG_BASE)/$(PKG_VERSION)/submodules \
 		http://qt.mirror.constant.com/archive/qt/$(PKG_BASE)/$(PKG_VERSION)/submodules
-PKG_HASH:=33960404d579675b7210de103ed06a72613bfc4305443e278e2d32a3eb1f3d8c
+PKG_HASH:=909fad2591ee367993a75d7e2ea50ad4db332f05e1c38dd7a5a274e156a4e0f8
 
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)-everywhere-src-$(PKG_VERSION)
 
@@ -139,16 +139,7 @@ CONFIGURE_ARGS = \
 		-no-openvg \
 		-no-pch \
 		-no-slog2 \
-		-no-sql-db2 \
-		-no-sql-ibase \
-		-no-sql-mysql \
-		-no-sql-oci \
-		-no-sql-odbc \
-		-no-sql-psql \
-		-no-sql-sqlite \
-		-no-sql-sqlite2 \
-		-no-sql-tds \
-		-no-sqlite \
+		-sql-sqlite \
 		-no-trace \
 		-no-tslib \
 		-no-vulkan \
@@ -159,13 +150,13 @@ CONFIGURE_ARGS = \
 		-no-compile-examples \
 		-no-feature-concurrent \
 		-no-feature-gssapi \
-		-no-feature-sql \
 		-no-feature-testlib \
 		-make libs \
 		-nomake examples \
 		-nomake tests \
 		-nomake tools \
-		-v
+		-v 
+
 
 define Build/Compile
 	+$(MAKE) $(PKG_JOBS) -C $(PKG_BUILD_DIR)
@@ -204,6 +195,7 @@ endef
 $(eval $(call DefineQtbaseLibrary,core,,+QT5_INCLUDE_ATOMIC:libatomic +libpcre2-16 +zlib))
 $(eval $(call DefineQtbaseLibrary,network,core,+libopenssl +zlib))
 $(eval $(call DefineQtbaseLibrary,xml,core,))
+$(eval $(call DefineQtbaseLibrary,sql,core))
 
 $(foreach lib,$(QTBASE_LIBS),$(eval $(call BuildPackage,qt5-$(lib))))
 $(eval $(call BuildPackage,qtbase))
